@@ -1,59 +1,69 @@
+#1. Develop a linear model between 'peak-rpm' vs. 'price'
 import pandas as pd
 df=pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DA0101EN-SkillsNetwork/labs/Data%20files/automobileEDA.csv')
-
-#1. Create an equation for 'peak-rpm' vs. 'price'
-
 x=df[['peak-rpm']]
+x1=df['peak-rpm']
 y=df['price']
+
 from sklearn.linear_model import LinearRegression
 lm=LinearRegression()
 lm.fit(x,y)
-m=lm.coef_
-y=lm.intercept_
-print(m,y)
-
 yhat=lm.predict(x)
-yhat[30]
+import matplotlib.pyplot as plt
+plt.plot(x1,yhat,color='red')
+plt.scatter(x1,y)
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error
+print('Gradients:',lm.coef_)
+print('Intercept:',lm.intercept_)
+print('R2:',lm.score(x,y))
+print('MSE:',mean_squared_error(y,yhat))
 
-import seaborn as sns
-sns.regplot(x='peak-rpm',y='price',data=df)
-
-df[['peak-rpm','price']].corr()
-
-#2. Create a linear-regression model for 'highway-mpg' vs. price
-
-x=df[['highway-mpg']]
+#2. Develop a polynomial model between 'peak-rpm' vs. 'price' 
+import pandas as pd
+df=pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DA0101EN-SkillsNetwork/labs/Data%20files/automobileEDA.csv')
+x=df[['peak-rpm']]
+x1=df['peak-rpm']
 y=df['price']
+
+from sklearn.preprocessing import PolynomialFeatures
+pm=PolynomialFeatures(degree=2)
+x_poly=pm.fit_transform(x)
 from sklearn.linear_model import LinearRegression
 lm=LinearRegression()
-lm.fit(x,y)
-m=lm.coef_
-y=lm.intercept_
-print(m,y)
+lm.fit(x_poly,y)
 
-yhat=lm.predict(x)
-yhat[30]
+yhat=lm.predict(x_poly)
 
-import seaborn as sns
-sns.regplot(x='highway-mpg',y='price',data=df)
+import matplotlib.pyplot as plt
+plt.plot(x1,yhat,color='red')
+plt.scatter(x1,y,)
 
-df[['highway-mpg','price']].corr()
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error
+print('R2',r2_score(y,yhat))
+print('MSE:',mean_squared_error(y,yhat))
+print('Gradient:',lm.coef_)
+print('Intercept:',lm.intercept_)
 
-#3. Create a multiple linear model using 'horsepower','curb-weight','engine-size','highway-mpg'
-
+#3. Develop a Multiple Linear Regression for price
+import pandas as pd
+df=pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DA0101EN-SkillsNetwork/labs/Data%20files/automobileEDA.csv')
 z=df[['horsepower','curb-weight','engine-size','highway-mpg']]
 y=df['price']
+
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error
 lm=LinearRegression()
 lm.fit(z,y)
-m=lm.coef_
-c=lm.intercept_
-print(m,c)
 
-#4. Find residual regression between 'highway-mpg' vs. 'price'
+yhat=lm.predict(z)
+print('Gradient:',lm.coef_)
+print('Intercept',lm.intercept_)
+print('R2:',r2_score(y,yhat))
+print('MSE:',mean_squared_error(y,yhat))
 
-x=df[['highway-mpg']]
-y=df['price']
-
-import seaborn as sns
-sns.residplot(x='highway-mpg',y='price',data=df)
+import matplotlib.pyplot as plt
+plt.plot(y)
+plt.plot(yhat)
