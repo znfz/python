@@ -1,0 +1,18 @@
+import pandas as pd
+df=pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DA0101EN-SkillsNetwork/labs/Data%20files/automobileEDA.csv')
+df.columns
+x=df[['highway-mpg']]
+y=df['price']
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test=train_test_split(x,y,test_size=0.01)
+
+from sklearn.linear_model import LinearRegression
+lm=LinearRegression()
+lm.fit(x_train,y_train)
+
+lm.predict(x_test)
+
+y_test
+
+lm.score(x_test,y_test)
