@@ -1,18 +1,38 @@
 import pandas as pd
 df=pd.read_csv('https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DA0101EN-SkillsNetwork/labs/Data%20files/automobileEDA.csv')
-df.columns
 x=df[['highway-mpg']]
 y=df['price']
 
+#1. Test 40% of the data
+
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test=train_test_split(x,y,test_size=0.01)
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.4)
+from sklearn.linear_model import LinearRegression
+lm=LinearRegression()
+lm.fit(x_train,y_train)
+
+yhat=lm.predict(x_test)
+print('The first 5 values predicted are',yhat[:5])
+print('The first 5 values actual are',y_test[:5])
+print('The R2 for the model is',lm.score(x_test,y_test))
+
+#2. Find the separate R2 values when the model is fitted 3 times
+
+from sklearn.model_selection import cross_val_score
+Rcross=cross_val_score(lm,x_train,y_train,cv=4)
+print(Rcross)
+
+#3. 
+x=df[['horsepower']]
+y=df['price']
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.4)
 
 from sklearn.linear_model import LinearRegression
 lm=LinearRegression()
 lm.fit(x_train,y_train)
 
-lm.predict(x_test)
-
-y_test
-
-lm.score(x_test,y_test)
+from sklearn.model_selection import cross_val_score
+Rcross=cross_val_score(lm,x_train,y_train,cv=2)
+Rcross.mean()
